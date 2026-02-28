@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Organizacion } from './Organizacion/organizacion.model';
-import { Usuario } from './Usuarios/usuario.model';
+import { Organizacion } from '../models/organizacion.model';
+import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   // ORGANIZACIONES
-  getOrganizaciones(): Observable<{ organizacion: Organizacion[] }> {
-    return this.http.get<{ organizacion: Organizacion[] }>(
+  getOrganizaciones(): Observable<{ organizaciones: Organizacion[] }> {
+    return this.http.get<{ organizaciones: Organizacion[] }>(
       `${this.baseUrl}/organizaciones/get`
     );
   }
@@ -23,6 +23,12 @@ export class ApiService {
   createOrganizacion(name: string) {
     return this.http.post(
       `${this.baseUrl}/organizaciones/create`,
+      { name }
+    );
+  }
+  updateOrganizacion(id: string, name: string) {
+    return this.http.patch(
+      `${this.baseUrl}/organizaciones/update/${id}`,
       { name }
     );
   }
