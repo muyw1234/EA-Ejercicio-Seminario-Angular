@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../services/usuario.service';
 import { Usuario } from '../models/usuario.model';
 import { Organizacion } from '../models/organizacion.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
+
 
 @Component({
   selector: 'app-usuario-list',
@@ -31,11 +32,27 @@ export class UsuarioList implements OnInit {
   constructor(private api: UsuarioService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private dialog: MatDialog) {
     this.usuarioForm = this.fb.group({
       name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
       organizacion: ['', Validators.required],
     });
 
     this.searchControl = new FormControl('');
 
+  }
+
+  // Función para validar que las contraseñas son idénticas
+  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    // Solo validamos si ambos campos tienen algo escrito
+    if (password && confirmPassword && password !== confirmPassword) {
+      control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
   ngOnInit(): void {
@@ -95,15 +112,14 @@ loadOrganizaciones(): void {
 }
 
 guardar(): void {
-
+  
   if (this.usuarioForm.invalid) return;
 
-  const { name, organizacion } = this.usuarioForm.value;
+  const { name, email, password, organizacion } = this.usuarioForm.value;
 
   if (this.editando && this.usuarioEditId) {
-
-    // UPDATE
-    this.api.updateUsuario(this.usuarioEditId, name, organizacion)
+    // UPDATE: pasamos id, name, email, password, organizacion
+    this.api.updateUsuario(this.usuarioEditId, name, email, password, organizacion)
       .subscribe({
         next: () => {
           this.resetForm();
@@ -117,8 +133,8 @@ guardar(): void {
 
   } else {
 
-    // CREATE
-    this.api.createUsuario(name, organizacion)
+    // CREATE: pasamos name, email, password, organizacion
+    this.api.createUsuario(name, email, password, organizacion)
       .subscribe({
         next: () => {
           this.resetForm();

@@ -32,17 +32,17 @@ export class UsuarioService {
     );
   }
 
-  createUsuario(name: string, organizacion: string): Observable<any> {
+  createUsuario(name: string, email: string, password: string, organizacion: string): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/usuarios`,
-      { name, organizacion }
+      { name, email, password, organizacion }
     );
   }
 
-  updateUsuario(id: string, name: string, organizacion: string): Observable<any> {
+  updateUsuario(id: string, name: string, email: string, password: string, organizacion: string): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/usuarios/${id}`,
-      { name, organizacion }
+      { name, email, password, organizacion } 
     );
   }
 
