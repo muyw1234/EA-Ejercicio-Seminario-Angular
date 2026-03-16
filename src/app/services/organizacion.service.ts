@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Organizacion } from '../models/organizacion.model';
 import { environment } from '../../environments/environment';
+import { Usuario } from '../models/usuario.model';
 
 
 
@@ -48,6 +49,12 @@ export class OrganizacionService {
   deleteOrganizacion(id: string): Observable<void> {
     return this.http.delete<void>(
       `${this.baseUrl}/organizaciones/${id}`
+    );
+  }
+
+  getUsuariosByOrganizacion(id: string): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(
+      `${this.baseUrl}/organizaciones/${id}/users`
     );
   }
 }

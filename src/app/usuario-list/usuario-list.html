@@ -86,6 +86,7 @@
     <thead>
       <tr style="border-bottom: 1px solid #ccc;">
         <th>Nombre</th>
+        <th>ID</th>
         <th>Email</th>
         <th>Organización</th>
         <th>Acciones</th>
@@ -96,6 +97,7 @@
     <tbody>
       <tr *ngFor="let u of usuariosVisibles" style="border-bottom: 1px solid #eee;">
         <td style="padding: 8px 0;">{{ u.name }}</td>
+        <td>{{ u._id }}</td>
         <td>{{ u.email }}</td>
         <td>{{ organizacionLabel(u) }}</td> <td>
           <button (click)="editar(u)">Editar</button>

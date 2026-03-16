@@ -18,41 +18,89 @@
     
     <!-- Nombre con truncado si supera de 15 caracteres y botón para expandir -->
     <div>
-      <span class="name">
-      {{
-        expanded[org._id] || org.name.length <= 15
-          ? org.name
-          : (org.name | slice:0:15) + '...'
-      }}
+      <span class="name" (click)="toggleDetalle(org)" style="cursor:pointer">
+        {{
+          expanded_name[org._id] || org.name.length <= 15
+            ? org.name
+            : (org.name | slice:0:15) + '...'
+        }}
       </span>
 
-      <!-- Botón para mostrar más o menos si el nombre es largo -->
-      <button *ngIf="org.name.length > 15"
-              class="btn"
-              (click)="toggleExpand(org._id)">
-        {{ expanded[org._id] ? 'Mostrar menos' : 'Mostrar más' }}
-      </button>
+    <div *ngIf="expanded_form[org._id]" class="card" style="margin-top:10px; background-color: #fcfcfc;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h4>Detalle de la organización</h4>
+        <button type="button" class="btn" (click)="toggleVincular(org._id)">
+          {{ expanded_vincular[org._id] ? 'Cancelar' : '+ Vincular usuario' }}
+        </button>
+      </div>
+
+      <div *ngIf="expanded_vincular[org._id]" class="card" style="margin-top:10px; border: 1px dashed #444;">
+        <h3>Vincular Usuario a {{ org.name }}</h3>
+
+        <form [formGroup]="vincularForm" (ngSubmit)="vincularUsuario(org)">
+          <label>Usuario (ID):</label>
+          <input type="text" formControlName="usuario"  style="width: 100%; padding: 5px; margin-bottom: 10px;" />
+
+          <label>Contraseña:</label>
+          <input type="password" formControlName="password" style="width: 100%; padding: 5px; margin-bottom: 10px;" />
+
+          <button type="submit" class="btn" [disabled]="vincularForm.invalid">
+            Guardar
+          </button>
+        </form>
+      </div>
+
+      <!-- Detalle de organización, solo visible si se ha expandido -->
+      <div *ngIf="expanded_form[org._id]" class="card" style="margin-top:10px">
+        <h4>Detalle de la organización</h4>
+
+        <p><strong>ID:</strong> {{ org._id }}</p>
+
+        <h5>Usuarios</h5>
+
+        <ul *ngIf="org.usuarios?.length">
+          <li *ngFor="let u of org.usuarios">
+            {{ u.name }} - {{ u.email }}
+            <button type="button" 
+              class="btn delete-btn" 
+              (click)="desvincularUsuario(org, u)"
+              style="padding: 2px 10px; min-width: 40px;">
+              X
+            </button>
+          </li>
+        </ul>
+
+        <p *ngIf="!org.usuarios || org.usuarios.length === 0">
+          No hay usuarios en esta organización
+        </p>
+
+        </div>
+        </div>
     </div>
+    <!-- Botón para mostrar más o menos si el nombre es largo -->
+        <button *ngIf="org.name.length > 15"
+                class="btn"
+                (click)="toggleExpand(org._id)">
+          {{ expanded_name[org._id] ? 'Mostrar menos' : 'Mostrar más' }}
+        </button>
+        <!-- ID y botones de acción -->
+        <div>
+          <span class="muted">{{ org._id }}</span>
 
-    <!-- ID y botones de acción -->
-    <div>
-      <span class="muted">{{ org._id }}</span>
+          <!-- BOTÓN EDITAR -->
+          <button type="button"
+                  class="btn"
+                  (click)="editar(org)">
+            Editar
+          </button>
 
-      <!-- BOTÓN EDITAR -->
-      <button type="button"
-              class="btn"
-              (click)="editar(org)">
-        Editar
-      </button>
-
-      <!-- BOTÓN ELIMINAR -->
-      <button type="button"
-              class="btn delete-btn"
-              (click)="confirmDelete(org._id, org.name)">
-        X
-      </button>
-    </div>
-
+          <!-- BOTÓN ELIMINAR -->
+          <button type="button"
+                  class="btn delete-btn"
+                  (click)="confirmDelete(org._id, org.name)">
+            X
+          </button>
+        </div>
   </li>
 </ul>
 
