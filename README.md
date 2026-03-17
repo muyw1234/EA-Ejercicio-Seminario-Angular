@@ -49,6 +49,11 @@ src/
 
 ---
 
+## Uso de IA
+S'ha utilitzat assistència d'IA per al desenvolupament d'aquest exercico segons el detall següent:
+- Millorar la representació del fitxer organitzacion-list/organizacion-list.html
+- Corregir els errors de fitxer organitzacion-list/organizacion-list.ts
+
 ## Development server
 
 To start a local development server, run:
