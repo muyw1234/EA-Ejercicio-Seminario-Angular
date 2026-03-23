@@ -52,7 +52,9 @@ src/
 ## Uso de IA
 S'ha utilitzat assistència d'IA per al desenvolupament d'aquest exercico segons el detall següent:
 - Millorar la representació del fitxer organitzacion-list/organizacion-list.html
-- Corregir els errors de fitxer organitzacion-list/organizacion-list.ts
+- Corregir els errors de fitxer organitzacion-list/organizacion-list.ts. Concretament corregir la funció de desvincularUsuario, modificar el codi de manera més simple a la funció de vincularUsuario i també la representació del fitxer HTML per que quedi més fàcil de llegir.
+
+
 
 ## Development server
 
